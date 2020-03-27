@@ -1,2 +1,2 @@
-0   string   \xDC\xDC\x00\x0D\x0A  our thing:
->5  pstring  x                     %s
+0   string   \xDC\xDC\x0D\x0A\x1A\x0A\x00  binary format:
+>7  pstring  x                             %s

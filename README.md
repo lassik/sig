@@ -4,12 +4,13 @@
 
     $ chibi-scheme
     > (import (sig))
-    > (with-output-to-file "example.bin" (lambda () (sig-write "com.example.format")))
-    "com.example.format"
+    > (with-output-to-file "example.bin"
+        (lambda () (sig-write "example.com/format#2020")))
+    "example.com/format#2020"
     > (with-input-from-file "example.bin" sig-read)
-    "com.example.format"
+    "example.com/format#2020"
 
 ## file(1)
 
     $ file -m sig.magic example.bin
-    example.bin: our thing: com.example.format
+    example.bin: binary format: example.com/format#2020

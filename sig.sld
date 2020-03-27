@@ -1,4 +1,25 @@
 (define-library (sig)
   (export sig-read sig-write)
   (import (scheme base) (scheme read) (scheme write))
-  (include "sig.scm"))
+  (begin
+
+    (define magic (bytevector #xDC #xDC #x0D #x0A #x1A #x0A #x00))
+
+    (define (sig-read)
+      (let ((mg (read-bytevector (bytevector-length magic))))
+        (unless (equal? mg magic) (error "Bad magic"))
+        (let ((n (read-u8)))
+          (when (or (eof-object? n) (> n 127))
+            (error "Bad format-name length"))
+          (let ((bytes (read-bytevector n)))
+            (when (or (eof-object? bytes)
+                      (not (= n (bytevector-length bytes))))
+              (error "Short format-name"))
+            (utf8->string bytes)))))
+
+    (define (sig-write format-name)
+      (let ((bytes (string->utf8 format-name)))
+        (write-bytevector magic)
+        (write-u8 (bytevector-length bytes))
+        (write-bytevector bytes)
+        format-name))))
