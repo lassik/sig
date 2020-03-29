@@ -6,4 +6,5 @@
 >>16  ubeshort  x                             \b-%04x
 >>18  ubelong   x                             \b-%08x
 >>22  ubeshort  x                             \b%04x
->7    pstring   x                             %s
+>7    ubyte     >0                            URI
+>>7   pstring   x                             %s
