@@ -1,2 +1,9 @@
-0   string   \xDC\xDC\x0D\x0A\x1A\x0A\x00  binary format:
->7  pstring  x                             %s
+0     string    \xDC\xDC\x0D\x0A\x1A\x0A\x00  binary format:
+>7    ubyte     =0                            UUID
+>>8   ubelong   x                             %08x
+>>12  ubeshort  x                             \b-%04x
+>>14  ubeshort  x                             \b-%04x
+>>16  ubeshort  x                             \b-%04x
+>>18  ubelong   x                             \b-%08x
+>>22  ubeshort  x                             \b%04x
+>7    pstring   x                             %s
