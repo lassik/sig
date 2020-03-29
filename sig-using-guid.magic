@@ -1,0 +1,5 @@
+0      string    \xDC\xDC\x0D\x0A\x1A\x0A\x00  binary format:
+>7     ubyte     =0                            UUID
+>>8    guid      x                             %s
+>7     ubyte     >0                            URI
+>>7    pstring   x                             %s
