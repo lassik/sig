@@ -1,0 +1,102 @@
+Stream format
+-------------
+
+- Offset 0: magic bytes
+- Offset 7: length byte
+- Offset 8: signature (UUID or URI depending on length byte)
+
+
+Magic bytes
+-----------
+
+The stream starts with the seven hex bytes: DC DC 0D 0A 1A 0A 00
+
+DC DC - These first two bytes identify the format.
+      - They represent an invalid encoding of a Unicode surrogate pair.
+      - Invalid ASCII/UTF-8/UTF-16BE/UTF-16LE/UTF-32BE/UTF-32LE.
+      - High bit set, to detect bad transfers that clear it.
+0D 0A - CR LF, to detect conversion of CR LF newlines.
+1A    - Control-Z (stop file display under DOS).
+0A    - LF, to detect conversion of LF newlines.
+00    - Null byte, to detect bad transfers that drop or alter nulls.
+
+Since the magic bytes group into asymmetrical 2-byte and 4-byte pairs,
+they also detect 16-bit and 32-bit endian swaps.
+
+
+Length byte
+-----------
+
+The seven magic bytes are followed immediately by one length byte. It
+is interpreted as an unsigned integer (0..255) to get the length.
+
+If the length is zero, a 16-byte UUID signature follows.
+
+If the length is non-zero, a URI signature string with that many bytes
+follows. The string is not null-terminated.
+
+
+UUID signature
+--------------
+
+The UUID may be generated according to any version of the UUID
+specification. It is written as raw binary bytes with no delimiters.
+Endianness depends on which version of UUID is used (some versions are
+big-endian; some versions mix big-endian and little-endian subfields).
+
+
+URI signature
+-------------
+
+A URI signature is an arbitrary byte string of length 1..255. Two
+signatures are equal if they have the same number of bytes and all
+byte values are identical. In other words, equality comparison is
+based on the raw bytes, not their text interpretation.
+
+However, in practice the signature should consist entirely of ASCII
+graphic characters. It should be a valid URI. If there is no URI
+scheme in it, a default scheme of "http:" or "https:" is assumed.
+
+The URI should point at an existing resource (in particular, an
+existing web page) but this is not a requirement. The URI should
+contain a date: at least the year, possibly month and day as well.
+Even a time-of-day can be included if need be.
+
+The preferred date format is ISO 8601 (YYYY, YYYY-MM, YYYY-MM-DD,
+etc.) A ISO 8601 timestamp can be written using characters that are
+valid in HTTP URL fragments and HTML anchors. This means the URI can
+be a link that can be conveniently pasted into a web browser. The date
+part can make the link jump into the right part of the web page.
+
+
+Caveats
+-------
+
+* Old Corel Draw color palette files also start with the two bytes DC
+  DC. They use the file name extension ".cpl".
+
+
+References
+----------
+
+http://www.libpng.org/pub/png/spec/1.2/PNG-Rationale.html#R.PNG-file-signature
+
+(hex)       89  50  4e  47  0d  0a  1a  0a
+(meaning)        P   N   G  \r  \n  ^Z  \n
+
+File format detectors and signature lists:
+
+* https://www.darwinsys.com/file/
+* https://www.garykessler.net/library/file_sigs.html
+* https://filesignatures.net/
+* https://mark0.net/onlinetrid.py
+* https://www.nationalarchives.gov.uk/PRONOM/
+
+magic(5) manual pages:
+
+* DragonFly BSD
+* FreeBSD
+* Linux
+* NetBSD
+* OpenBSD
+* Solaris
